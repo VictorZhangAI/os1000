@@ -97,6 +97,17 @@ char *strcpy(char *dst, const char *src)
 	return dst;
 }
 
+errno_t strcpy_s(char *dst, size_t dstsz, const char *src)
+{
+	if(dstsz > sizeof(dst))
+		return -1;
+	char *d = dst;
+	while(dstsz--)
+		*d++ = *src++;
+	*d = '\0';
+	return 0;
+}
+
 int strcmp(const char *s1, const char *s2)
 {
 	while(*s1 && *s2)
