@@ -202,9 +202,18 @@ map_page(uint32_t* table1, vaddr_t vaddr, paddr_t paddr, uint32_t flags)
         table0[vpn0] = ((paddr / PAGE_SIZE) << 10) | flags | PAGE_V;
 }
 
-void user_entry(void)
+__attribute__((naked)) void
+user_entry(void)
 {
-	PANIC("not yet implemented");
+	__asm__ __volatile__(
+		"csrw sepc, %[sepc]\n"
+		"csrw sstatus, %[sstatus]\n"
+		"sret \n"
+		:
+		: [sepc] "r" (USER_BASE),
+		  [sstatus] "r" (SSTATUS_SPIE)
+	);
+
 }
 
 struct process *create_process(const void *image, size_t image_size)
@@ -297,9 +306,8 @@ void yield(void)
 }
 
 struct process *proc_a;
-struct process *proc_b;
 
-void proc_a_entry(void)
+/*void proc_a_entry(void)
 {
         printf("starting process A\n");
         while(1)
@@ -307,17 +315,7 @@ void proc_a_entry(void)
                 putchar('A');
                 yield();
         }
-}
-
-void proc_b_entry(void)
-{
-        printf("starting process B\n");
-        while(1)
-        {
-                putchar('B');
-                yield();
-        }
-}
+}*/
 
 __attribute__((section(".text.boot")))
 __attribute__((naked))
