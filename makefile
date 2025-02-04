@@ -12,7 +12,7 @@ kernel:
 	-kernel kernel.elf
 
 user:
-	$(CC) $(CFLAGS) -Wl -Tuser.ld -Wl,-Map=shell.map -o shell.elf \
+	$(CC) $(CFLAGS) -Wl,-Tuser.ld -Wl,-Map=shell.map -o shell.elf \
 	shell.c \
 	user.c \
 	common.c
