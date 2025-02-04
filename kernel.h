@@ -65,6 +65,18 @@ struct process
 
 #endif
 
+#define ASSERT(exp) \
+	do{ \
+		if((exp) == 0) \
+			PANIC("Assertion failed: %d", exp); \
+		else ; \
+	}while(0)
+
+#define ASSERT_EQ(LVAL, RVAL) \
+	do{ \
+	ASSERT((LVAL) == (RVAL)); \
+	}while(0)
+
 #define READ_CSR(reg) \
 	({ \
 	 unsigned long __tmp; \

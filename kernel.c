@@ -280,9 +280,11 @@ void kernel_main(void)
 	idle_proc->pid = -1;
 	current_proc = idle_proc;
 
-	proc_a = create_process((uint32_t)proc_a_entry);
-	proc_b = create_process((uint32_t)proc_b_entry);
+//	proc_a = create_process((uint32_t)proc_a_entry);
+//	proc_b = create_process((uint32_t)proc_b_entry);
 
-	yield();
+//	yield();
+//	ASSERT(2 == 4);
+	ASSERT_EQ(2, 4);
 	PANIC("switched to idle process");
 }
