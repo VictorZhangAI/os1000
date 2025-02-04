@@ -20,6 +20,12 @@ void printf(const char *fmt, ...)
 				case '%':
 					putchar('%');
 					goto end;
+				case 'c':
+					{
+					const char c = va_arg(vargs, const char);
+					putchar(c);
+					break;
+					}
 				case 's':{
 					const char *s = va_arg(vargs, const char *);
 			       		while(*s)

@@ -144,9 +144,9 @@ void kernel_main(void)
 	printf("alloc pages test: paddr0=%x\n", paddr0);
 	printf("alloc pages test: paddr1=%x\n", paddr1);
 
-	PANIC("booted!");
+	//PANIC("booted!");
 
-	printf("\n\nHello %s\n", "World!");
+	printf("\n\nHello %c %s\n", ',', "World!");
 	printf("1 + 2 = %d, %x, %X\n", 1 + 2, 0x1234abcd, 0x3F3F3F3F);
 	for(;;)
 		__asm__ __volatile__("wfi");
