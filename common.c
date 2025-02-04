@@ -22,7 +22,7 @@ void printf(const char *fmt, ...)
 					goto end;
 				case 'c':
 					{
-					const char c = va_arg(vargs, const char);
+					int c = va_arg(vargs, int);
 					putchar(c);
 					break;
 					}
