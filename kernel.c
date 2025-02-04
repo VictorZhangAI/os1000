@@ -212,10 +212,27 @@ struct process *create_process(uint32_t pc)
 	return proc;
 }
 
-void delay(void)
+struct process* current_proc;
+struct process* idle_proc;
+
+void yield(void)
 {
-	for(int i = 0; i < 300000000; i++)
-		__asm__ __volatile__("nop");
+	struct process *next = idle_proc;
+	for(int i = 0; i < PROCS_MAX; i++)
+	{
+		struct process *proc = &procs[(current_proc->pid + i) % PROCS_MAX];
+		if(proc->state == PROC_RUNNABLE && proc->pid > 0)
+		{
+			next = proc;
+			break;
+		}
+	}
+	if(next == current_proc)
+		return;
+
+	struct process *prev = current_proc;
+	current_proc = next;
+	switch_context(&prev->sp, &next->sp);
 }
 
 struct process *proc_a;
@@ -223,24 +240,34 @@ struct process *proc_b;
 
 void proc_a_entry(void)
 {
-	printf("starting process A\n");
-	while(1)
-	{
-		putchar('A');
-		switch_context(&proc_a->sp, &proc_b->sp);
-		delay();
-	}
+        printf("starting process A\n");
+        while(1)
+        {
+                putchar('A');
+                yield();
+        }
 }
 
 void proc_b_entry(void)
 {
-	printf("starting process B\n");
-	while(1)
-	{
-		putchar('B');
-		switch_context(&proc_b->sp, &proc_a->sp);
-		delay();
-	}
+        printf("starting process B\n");
+        while(1)
+        {
+                putchar('B');
+                yield();
+        }
+}
+
+__attribute__((section(".text.boot")))
+__attribute__((naked))
+void boot(void)
+{
+        __asm__ __volatile__(
+                "mv sp, %[stack_top]\n"
+                "j kernel_main\n"
+                :
+                : [stack_top] "r" (__stack_top)
+        );
 }
 
 void kernel_main(void)
@@ -249,21 +276,13 @@ void kernel_main(void)
 
 	WRITE_CSR(stvec, (uint32_t)kernel_entry);
 
+	idle_proc = create_process((uint32_t)NULL);
+	idle_proc->pid = -1;
+	current_proc = idle_proc;
+
 	proc_a = create_process((uint32_t)proc_a_entry);
 	proc_b = create_process((uint32_t)proc_b_entry);
-	proc_a_entry();
 
-	PANIC("unreachable!");
-}
-
-__attribute__((section(".text.boot")))
-__attribute__((naked))
-void boot(void)
-{
-	__asm__ __volatile__(
-		"mv sp, %[stack_top]\n"		
-		"j kernel_main\n"
-		:
-		: [stack_top] "r" (__stack_top)
-	);
+	yield();
+	PANIC("switched to idle process");
 }
