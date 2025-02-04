@@ -68,7 +68,7 @@ struct process
 #define ASSERT(exp) \
 	do{ \
 		if((exp) == 0) \
-			PANIC("Assertion failed: %d", exp); \
+			PANIC("Assertion failed: " #exp); \
 		else ; \
 	}while(0)
 
