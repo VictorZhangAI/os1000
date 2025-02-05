@@ -34,13 +34,13 @@ prompt:
 		else if(strcmp(cmdline, "read") == 0)
 		{
 			char buf[128];
-			int len = read("hello.txt", buf, sizeof(buf));
+			int len = read("./hello.txt", buf, sizeof(buf));
 			buf[len] = '\0';
 			printf("%s\n", buf);
 		}
 		else if(strcmp(cmdline, "write") == 0)
 		{
-			write("hello.txt", "Hello from shell to VZstless!\n", 19);
+			write("./hello.txt", "Hello from shell to VZstless!\n", 19);
 		}
 		else
 			printf("Unknown command!\n");

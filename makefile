@@ -4,7 +4,7 @@ CFLAGS=-std=c11 -O2 -g3 -Wall -Wextra --target=riscv32-unknown-elf -fno-stack-pr
 OBJCOPY=llvm-objcopy
 
 all:
-	(cd disk && tar cf ../disk.tar --format=ustar ./*.txt)
+	cd disk && tar cf ../disk.tar --format=ustar ./*.txt
 	$(CC) $(CFLAGS) -Wl,-Tuser.ld -Wl,-Map=shell.map -o shell.elf \
 	shell.c \
 	user.c \

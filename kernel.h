@@ -67,6 +67,7 @@ struct process
 #define PAGE_U (1 << 4)
 
 #define SSTATUS_SPIE (1 << 5)
+#define SSTATUS_SUM (1 << 18)
 
 #define SCAUSE_ECALL 8
 
