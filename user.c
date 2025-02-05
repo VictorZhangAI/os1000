@@ -34,6 +34,16 @@ int getchar(void)
 	return syscall(SYS_GETCHAR, 0, 0, 0);
 }
 
+int read(const char *filename, char *buf, int len)
+{
+	return syscall(SYS_READ, (int)filename, (int)buf, len);
+}
+
+int write(const char *filename, const char *buf, int len)
+{
+	return syscall(SYS_WRITE, (int)filename, (int)buf, len);
+}
+
 __attribute__((section(".text.start")))
 __attribute__((naked))
 void start(void)

@@ -38,5 +38,6 @@ struct file
 
 int oct2int(char *oct, int len);
 void fs_init(void);
+void fs_flush(void);
 
 #endif

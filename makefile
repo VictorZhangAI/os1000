@@ -27,4 +27,4 @@ all:
 
 .PHONY: clean
 clean:
-	rm *.elf *.map *.o *.log *.tar shell.bin 
+	-rm *.elf *.map *.o *.log *.tar shell.bin 
