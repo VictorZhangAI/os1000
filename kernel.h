@@ -72,6 +72,8 @@ struct process
 
 #define USER_BASE 0x10000000
 
+paddr_t alloc_pages(uint32_t n);
+
 #define PANIC(fmt, ...) \
 	do{ \
 	printf("PANIC: %s:%d: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); \

@@ -14,11 +14,6 @@ struct process procs[PROCS_MAX];
 struct process *current_proc;
 struct process *idle_proc;
 
-struct virtio_virtq *blk_request_vq;
-struct virtio_blk_req *blk_req;
-paddr_t blk_req_paddr;
-uint32_t blk_capacity;
-
 struct sbiret sbi_call(long arg0, long arg1, long arg2, long arg3, long arg4, 
 			long arg5, long fid, long eid)
 {
@@ -360,46 +355,6 @@ void yield(void)
 	switch_context(&prev->sp, &next->sp);
 }
 
-// struct process *proc_a;
-
-/*void proc_a_entry(void)
-{
-        printf("starting process A\n");
-        while(1)
-        {
-                putchar('A');
-                yield();
-        }
-}*/
-
-void virtio_blk_init(void)
-{
-	if(virtio_reg_read32(VIRTIO_REG_MAGIC) != 0x74726976)
-		PANIC("virtio: invalid magic value");
-	if(virtio_reg_read32(VIRTIO_REG_VERSION) != 1)
-		PANIC("virtio: invalid version");
-	if(virtio_reg_read32(VIRTIO_REG_DEVICE_ID) != VIRTIO_DEVICE_BLK)
-		PANIC("virtio: invalid device id");
-
-	virtio_reg_write32(VIRTIO_REG_DEVICE_STATUS, 0);
-	
-	virtio_reg_fetch_and_or32(VIRTIO_REG_DEVICE_STATUS, VIRTIO_STATUS_ACK);
-	
-	virtio_reg_fetch_and_or32(VIRTIO_REG_DEVICE_STATUS, VIRTIO_STATUS_DRIVER);
-	
-	virtio_reg_fetch_and_or32(VIRTIO_REG_DEVICE_STATUS, VIRTIO_STATUS_FEAT_OK);
-	
-	blk_request_vq = virtq_init(0);
-	
-	virtio_reg_write32(VIRTIO_REG_DEVICE_STATUS, VIRTIO_STATUS_DRIVER_OK);
-
-	blk_capacity = virtio_reg_read64(VIRTIO_REG_DEVICE_CONFIG + 0) * SECTOR_SIZE;
-	printf("virtio-blk: capcacity is %d bytes\n", blk_capacity);
-
-	blk_req_paddr = alloc_pages(align_up(sizeof(*blk_req), PAGE_SIZE) / PAGE_SIZE);
-	blk_req = (struct virtio_blk_req *) blk_req_paddr;
-}
-
 __attribute__((section(".text.boot")))
 __attribute__((naked))
 void boot(void)
@@ -419,6 +374,13 @@ void kernel_main(void)
 	WRITE_CSR(stvec, (uint32_t)kernel_entry);
 
 	virtio_blk_init();
+
+	char buf[SECTOR_SIZE];
+	read_write_disk(buf, 0, false);
+	printf("first sector: %s\n", buf);
+
+	strcpy(buf, "hello from kernel!!!\n");
+	read_write_disk(buf, 0, true);
 
 	idle_proc = create_process(NULL, 0);
 	idle_proc->pid = -1;

@@ -7,7 +7,7 @@ void main(void)
 prompt:
 		printf("\n$ ");
 		char cmdline[128];
-		for(int i = 0;;i++)
+		for(uint32_t i = 0;;i++)
 		{
 			char ch = getchar();
 			putchar(ch);

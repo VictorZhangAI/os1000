@@ -1,6 +1,9 @@
 #ifndef __VIRTIO_H__
 #define __VIRTIO_H__
 
+#include"common.h"
+#include"kernel.h"
+
 #define SECTOR_SIZE 512
 #define VIRTQ_ENTRY_NUM 16
 #define VIRTIO_DEVICE_BLK 2
@@ -73,5 +76,9 @@ struct virtio_blk_req
     uint8_t data[512];
     uint8_t status;
 }__attribute__((packed));
+
+
+void virtio_blk_init(void);
+void read_write_disk(void *buf, uint32_t sector, int is_write);
 
 #endif
