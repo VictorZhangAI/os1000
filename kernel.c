@@ -1,6 +1,8 @@
 #include "kernel.h"
 #include "common.h"
 #include "virtio.h"
+#include "fs.h"
+
 
 typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;
@@ -374,6 +376,8 @@ void kernel_main(void)
 	WRITE_CSR(stvec, (uint32_t)kernel_entry);
 
 	virtio_blk_init();
+
+	fs_init();
 
 	char buf[SECTOR_SIZE];
 	read_write_disk(buf, 0, false);

@@ -4,6 +4,7 @@ CFLAGS=-std=c11 -O2 -g3 -Wall -Wextra --target=riscv32-unknown-elf -fno-stack-pr
 OBJCOPY=llvm-objcopy
 
 all:
+	(cd disk && tar cf ../disk.tar --format=ustar ./*.txt)
 	$(CC) $(CFLAGS) -Wl,-Tuser.ld -Wl,-Map=shell.map -o shell.elf \
 	shell.c \
 	user.c \
@@ -16,13 +17,14 @@ all:
 	common.c \
 	kernel.c \
 	virtio.c \
+	fs.c \
 	shell.bin.o
 	$(QEMU) -machine virt -bios default -nographic -serial mon:stdio --no-reboot \
 	-d unimp,guest_errors,int,cpu_reset -D qemu.log \
-	-drive id=drive0,file=smooth.txt,format=raw,if=none \
+	-drive id=drive0,file=disk.tar,format=raw,if=none \
 	-device virtio-blk-device,drive=drive0,bus=virtio-mmio-bus.0 \
         -kernel kernel.elf
 
 .PHONY: clean
 clean:
-	rm *.elf *.map *.o *.log shell.bin 
+	rm *.elf *.map *.o *.log *.tar shell.bin 
