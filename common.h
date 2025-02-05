@@ -7,6 +7,7 @@ typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
 typedef unsigned long long uint64_t;
 typedef uint32_t size_t;
+typedef int pid_t;
 typedef uint32_t errno_t;
 typedef uint32_t paddr_t;
 typedef uint32_t vaddr_t;
@@ -32,5 +33,9 @@ errno_t strcpy_s(char *dst, size_t dstsz, const char *src);
 int strcmp(const char *s1, const char *s2);
 
 void printf(const char *fmt, ...);
+
+#define SYS_PUTCHAR 1
+#define SYS_GETCHAR 2
+#define SYS_EXIT 3
 
 #endif

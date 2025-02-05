@@ -48,10 +48,11 @@ struct trap_frame
 
 #define PROC_UNUSED 0
 #define PROC_RUNNABLE 1
+#define PROC_EXITED 2
 
 struct process 
 {
-	int pid;
+	pid_t pid;
 	int state;
 	vaddr_t sp;
 	uint32_t* page_table;
@@ -67,6 +68,8 @@ struct process
 
 #define SSTATUS_SPIE (1 << 5)
 
+#define SCAUSE_ECALL 8
+
 #define USER_BASE 0x10000000
 
 #define PANIC(fmt, ...) \
@@ -74,8 +77,6 @@ struct process
 	printf("PANIC: %s:%d: " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
 	for(;;); \
 	}while(0) 
-
-#endif
 
 #define ASSERT(exp) \
 	do{ \
@@ -101,3 +102,5 @@ struct process
 		uint32_t __tmp = (value); \
 		__asm__ __volatile__("csrw " #reg ", %0" :: "r"(__tmp)); \
 	} while(0)
+
+#endif
