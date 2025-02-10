@@ -5,3 +5,10 @@ re-constructed as the source tutorial has some kind of un-elegant
 It turns out that this OS is not suitable for persistent use as it always runs into panic after a second boot.  
 But anyway, a great toy for operatin system teaching, isn't it?  
 Please feel free to fork this repo and modify it.  
+
+after cloning the repo, simply run ``make`` will generate the ``kernel.elf``  
+run
+```shell
+make qemu
+```
+will boot the system using kernel.elf
