@@ -11,6 +11,8 @@ after cloning the repo, run following command to download OpenSBI in the project
 curl -LO https://github.com/qemu/qemu/raw/v8.0.4/pc-bios/opensbi-riscv32-generic-fw_dynamic.bin
 ```
 
+emm...you also need a directory ``disk`` which contains file like ``hello.txt`` in it.
+
 simply run ``make`` will generate the ``kernel.elf``  
 run
 ```shell
